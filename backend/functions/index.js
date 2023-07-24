@@ -1,3 +1,15 @@
+/**
+ * Import function triggers from their respective submodules:
+ *
+ * const {onCall} = require("firebase-functions/v2/https");
+ * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
+ *
+ * See a full list of supported triggers at https://firebase.google.com/docs/functions
+ */
+
+const {onRequest} = require("firebase-functions/v2/https");
+const logger = require("firebase-functions/logger");
+
 var admin = require("firebase-admin");
 
 var serviceAccount = require("./serviceAccount.json");
@@ -88,8 +100,3 @@ app.put("/products/:id", async (req, res) => {
 });
 
 exports.api = functions.https.onRequest(app);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
