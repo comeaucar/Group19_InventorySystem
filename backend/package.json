@@ -4,6 +4,7 @@
   "description": "Firebase backend for agriculture inventory management system.",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,5 +25,11 @@
   "bugs": {
     "url": "https://github.com/comeaucar/Group19_InventorySystem/issues"
   },
-  "homepage": "https://github.com/comeaucar/Group19_InventorySystem#readme"
+  "homepage": "https://github.com/comeaucar/Group19_InventorySystem#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "firebase": "^10.1.0",
+    "firebase-admin": "^11.10.1"
+  }
 }
