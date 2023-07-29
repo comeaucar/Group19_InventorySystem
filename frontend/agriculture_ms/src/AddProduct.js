@@ -48,7 +48,7 @@ const AddProduct = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
   const [error, setError] = React.useState(null);
-  const [qty, setQty] = React.useState(0)
+  const [qty, setQty] = React.useState(0);
   const [costPer, setCostPer] = React.useState(0);
   const [harvestDate, setHarvestDate] = React.useState(yesterday);
   const [expiryDate, setExpiryDate] = React.useState(tomorrow);
@@ -76,6 +76,7 @@ const AddProduct = () => {
     if (value < 0) {
       value = 0;
     }
+    const val = Math.floor(parseInt(value));
     setQty(value);
   };
 
@@ -87,68 +88,71 @@ const AddProduct = () => {
     setCostPer(value);
   };
 
-  // React.useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const manusRef = collection(db, 'manufacturers');
-  //       const productsRef = collection(db, 'products');
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const manusRef = collection(db, "manufacturers");
+        const productsRef = collection(db, "products");
 
-  //       const manusSnap = await getDocs(manusRef);
-  //       const productsSnap = await getDocs(productsRef);
+        const manusSnap = await getDocs(manusRef);
+        const productsSnap = await getDocs(productsRef);
 
-  //       const manus = manusSnap.docs.map((m) => ({
-  //         id: m.id,
-  //         ...m.data()
-  //       }));
+        const manus = manusSnap.docs.map((m) => ({
+          id: m.id,
+          ...m.data(),
+        }));
 
-  //       const products = productsSnap.docs.map((p) => ({
-  //         id: p.id,
-  //         ...p.data()
-  //       }));
+        const products = productsSnap.docs.map((p) => ({
+          id: p.id,
+          ...p.data(),
+        }));
 
-  //       setManus(manus);
-  //       setProducts(products);
+        setManus(manus);
+        setProducts(products);
 
-  //       console.log(products);
-  //     } catch (err) {
-  //       console.log('ERR GETTING DATA', err);
-  //     }
-  //     setIsLoading(false);
-  //   }
+        console.log(products);
+      } catch (err) {
+        console.log("ERR GETTING DATA", err);
+      }
+      setIsLoading(false);
+    };
 
-  //   fetchData();
-  // },[])
+    fetchData();
+  }, []);
 
-  const handleSubmit = async(event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const productRef = doc(db, 'products', product);
+    const productRef = doc(db, "products", product);
 
-    const batchesRef = collection(productRef, 'batches')
+    const batchesRef = collection(productRef, "batches");
+
+    const cp = parseFloat(costPer);
+    const q = Math.floor(parseInt(qty));
 
     const newBatch = {
-      costPerItem: costPer,
-      quantity: qty,
+      costPerItem: cp,
+      quantity: q,
       harvestDate: new Date(harvestDate).getTime(),
       expiryDate: new Date(expiryDate).getTime(),
-      manufacturer: manu
-    }
+      manufacturer: manu,
+    };
 
     const productDoc = (await getDoc(productRef)).data();
 
-    const locTotalValue = (qty * costPer);
+    const locTotalValue = q * cp;
 
-    const newAvgCost = ((locTotalValue) + productDoc.totalValue) / (productDoc.quantity + qty);
+    const newAvgCost =
+      (locTotalValue + productDoc.totalValue) / (productDoc.quantity + q);
 
-    const productUpdateRef = await updateDoc(productRef, {
-      quantity: increment(qty),
+    await updateDoc(productRef, {
+      quantity: increment(q),
       avgCost: newAvgCost,
       totalValue: increment(locTotalValue),
-      
-    })
+      totalSpent: increment(locTotalValue),
+    });
     const batchDocRef = await addDoc(batchesRef, newBatch);
 
     console.log("New batch added with id: ", batchDocRef.id);
-    console.log("Updated product: ", productUpdateRef.id);
     navigate("/dashboard");
   };
 
@@ -160,16 +164,16 @@ const AddProduct = () => {
     return <p>Error: {error.message}</p>;
   }
   return (
-    <Container maxWidth="lg" sx={{marginTop: '10px'}}>
+    <Container maxWidth="lg" sx={{ marginTop: "10px" }}>
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: 'auto',
+          height: "auto",
         }}
       >
-        <Card color="primary" sx={{width: "50%"}}>
+        <Card color="primary" sx={{ width: "50%" }}>
           <CardContent>
             <form onSubmit={handleSubmit}>
               <h1>Add Product</h1>
@@ -191,7 +195,7 @@ const AddProduct = () => {
                     );
                   })}
                 </Select>
-                <InputLabel id="selectManuLabel">Manufacturer</InputLabel>
+                <InputLabel id="selectManuLabel">Supplier</InputLabel>
                 <Select
                   labelId="selectManuLabel"
                   color="success"
@@ -213,7 +217,7 @@ const AddProduct = () => {
                   id="harvestDate"
                   disableFuture
                   value={harvestDate}
-                  onChange={(value)=> setHarvestDate(value)}
+                  onChange={(value) => setHarvestDate(value)}
                 />
                 <DatePicker
                   label="Expiry"

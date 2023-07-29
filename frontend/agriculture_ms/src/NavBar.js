@@ -4,8 +4,11 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { Box } from "@mui/system";
-import ControlPointIcon from "@mui/icons-material/ControlPoint"
+import { Box, Stack } from "@mui/system";
+import ControlPointIcon from "@mui/icons-material/ControlPoint";
+import { signOut } from "firebase/auth";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { auth } from "./firebase";
 
 const NavBar = () => {
   const navigate = useNavigate(); // Moved inside the function component
@@ -30,10 +33,38 @@ const NavBar = () => {
               HarvestHub
             </Typography>
           </Button>
-          <Button color="secondary" variant="contained" sx={{ marginLeft: "auto" }} onClick={() => navigate('/addproduct')}>
-            Add Product
-            <ControlPointIcon />
-          </Button>
+          {auth.currentUser ? (
+            <Box sx={{ marginLeft: "auto" }}>
+              <Stack spacing={1} direction="row">
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => navigate("/addproduct")}
+                >
+                  Add Product
+                  <ControlPointIcon />
+                </Button>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => navigate("/addsupplier")}
+                >
+                  Add Supplier
+                  <ControlPointIcon />
+                </Button>
+                <Button
+                  color="error"
+                  variant="contained"
+                  onClick={() => signOut(auth)}
+                >
+                  Logout
+                  <LogoutIcon />
+                </Button>
+              </Stack>
+            </Box>
+          ) : (
+            ""
+          )}
         </Toolbar>
       </AppBar>
       <Outlet /> {/* This is where child components will be rendered */}
