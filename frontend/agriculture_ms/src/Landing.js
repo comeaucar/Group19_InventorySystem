@@ -31,6 +31,13 @@ function Landing() {
     event.preventDefault();
     console.log("email:", email);
     console.log("Password:", password);
+
+    signInWithEmailAndPassword(auth, email, password).then((res) => {
+      console.log('res',res);
+      navigate("/dashboard");
+    }).catch((err) => {
+      console.log(err);
+    })
   };
   // register
   const [emailR, setEmailR] = React.useState("");
