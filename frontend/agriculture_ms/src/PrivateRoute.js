@@ -9,7 +9,7 @@ const ProtectedScreen = ({ Component }) => {
   return currentUser ? (
     <Component />
   ) : (
-    <Navigate to="/login" state={{ from: location }} />
+    <Navigate to="/landing" state={{ from: location }} />
   );
 };
 

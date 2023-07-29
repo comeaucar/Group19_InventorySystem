@@ -14,14 +14,23 @@ import {
   Paper,
   Box,
   Badge,
-  Chip
+  Chip,
 } from "@mui/material";
 import { manu } from "./manuSeed";
-import { collection, addDoc, setDoc, doc, updateDoc, increment, runTransaction, getDocs } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  updateDoc,
+  increment,
+  runTransaction,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "./firebase";
 import { useState, useEffect } from "react";
 import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
 // const seedManu = () => {
 //   try {
@@ -93,11 +102,9 @@ const getProducts = async () => {
 };
 
 
-
 const Dashboard = () => {
-  
   const [products, setProducts] = useState([]);
-  const [rows,setRows] = useState([])
+  const [rows, setRows] = useState([]);
   const navigate = useNavigate();
   //seedManu();
   useEffect(() => {
@@ -154,7 +161,13 @@ const Dashboard = () => {
         return (row.pricePer * row.quantity - row.totalValue).toFixed(2);
       },
       renderCell: (params) => {
-        return <Chip icon={<AttachMoneyIcon/>} color={params.value > 0 ? 'money':'error'} label={'$' + params.value }></Chip>;
+        return (
+          <Chip
+            icon={<AttachMoneyIcon />}
+            color={params.value > 0 ? "money" : "error"}
+            label={"$" + params.value}
+          ></Chip>
+        );
       },
     },
   ];

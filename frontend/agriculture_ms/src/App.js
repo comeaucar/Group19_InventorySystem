@@ -8,6 +8,8 @@ import PrivateRoute from "./PrivateRoute";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import NavBar from "./NavBar";
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
 
 const theme = createTheme({
   palette: {
@@ -78,31 +80,33 @@ const theme = createTheme({
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <AuthProvider>
-          <Routes>
-           <Route path='/' element={<NavBar/>}>
-              <Route
-                path="/dashboard"
-                element={<PrivateRoute Component={Dashboard} />}
-              />
-              <Route path="/landing" element={<Landing />} />
-              <Route path="*" element={<Navigate to="/landing" replace />} />
-              <Route
-                path="/addproduct"
-                element={<PrivateRoute Component={AddProduct} />}
-              />
-              <Route
-                path="/editproduct/:id"
-                element={<PrivateRoute Component={EditProduct} />}
-              />
-           </Route>
-          </Routes>
-        </AuthProvider>
-      </Router>
-    </ThemeProvider>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<NavBar />}>
+                <Route
+                  path="/dashboard"
+                  element={<PrivateRoute Component={Dashboard} />}
+                />
+                <Route path="/landing" element={<Landing />} />
+                <Route path="*" element={<Navigate to="/landing" replace />} />
+                <Route
+                  path="/addproduct"
+                  element={<PrivateRoute Component={AddProduct} />}
+                />
+                <Route
+                  path="/editproduct/:id"
+                  element={<PrivateRoute Component={EditProduct} />}
+                />
+              </Route>
+            </Routes>
+          </AuthProvider>
+        </Router>
+      </ThemeProvider>
+    </LocalizationProvider>
   );
 }
 

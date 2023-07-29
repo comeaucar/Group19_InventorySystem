@@ -1,0 +1,47 @@
+export const products = [
+  {
+    id: "Apples",
+    category: Array(0),
+    quantity: 30,
+    avgCost: 0.618,
+    totalValue: 18.54,
+  },
+  {
+    id: "Barley",
+    pricePer: 1.17,
+    category: Array(0),
+    totalValue: 20.150000000000002,
+    avgCost: 0.65,
+  },
+  {
+    id: "Beets",
+    totalValue: 21.84,
+    quantity: 29,
+    avgCost: 0.7531034482758621,
+    category: Array(0),
+  },
+  {
+    id: "Bell Peppers",
+    pricePer: 1.12,
+    category: Array(0),
+    quantity: 36,
+    avgCost: 0.4069444444444445,
+    totalValue: 34,
+  },
+  {
+    id: "Blueberries",
+    quantity: 37,
+    avgCost: 0.40459459459459457,
+    pricePer: 0.7282702702702702,
+    category: Array(0),
+    totalValue: 34,
+  },
+  {
+    id: "Canola",
+    category: Array(0),
+    totalValue: 2.92,
+    avgCost: 0.1006896551724138,
+    quantity: 29,
+    totalValue: 34,
+  },
+];
