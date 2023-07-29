@@ -80,6 +80,8 @@ function Landing() {
         .catch((error) => {
           console.log(error);
         });
+    } else {
+      console.log("Passswords Do Not Match")
     }
   };
 

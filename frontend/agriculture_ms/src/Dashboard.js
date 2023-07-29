@@ -1,35 +1,16 @@
 import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  AppBar,
-  Button,
-  Toolbar,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Box,
-  Badge,
   Chip,
 } from "@mui/material";
 import { manu } from "./manuSeed";
 import {
   collection,
-  addDoc,
-  setDoc,
-  doc,
-  updateDoc,
-  increment,
-  runTransaction,
   getDocs,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { useState, useEffect } from "react";
-import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
 // const seedManu = () => {
@@ -101,7 +82,6 @@ const getProducts = async () => {
   return products;
 };
 
-
 const Dashboard = () => {
   const [products, setProducts] = useState([]);
   const [rows, setRows] = useState([]);
@@ -133,16 +113,16 @@ const Dashboard = () => {
     { field: "quantity", headerName: "Quantity", width: 150 },
     {
       field: "totalValue",
-      headerName: "Purchased Value",
+      headerName: "Current Cost Value",
       flex: 1,
       valueFormatter: ({ value }) => "$" + value.toFixed(2),
     },
     {
       field: "sellValue",
-      headerName: "Selling Value",
+      headerName: "Current Sell Value",
       flex: 1,
       valueGetter: ({ row }) => {
-        if (!row.pricePer || !row.quantity) {
+        if (row.pricePer < 0 || !row.quantity < 0) {
           return null;
         }
 
@@ -150,21 +130,99 @@ const Dashboard = () => {
       },
     },
     {
-      field: "expectedProfit",
-      headerName: "Expected Profit",
+      field: "numSold",
+      headerName: "Quantity Sold",
       flex: 1,
       valueGetter: ({ row }) => {
-        if (!row.pricePer || !row.totalValue) {
-          return null;
+        if (row.numSold) {
+          return row.numSold;
         }
 
-        return (row.pricePer * row.quantity - row.totalValue).toFixed(2);
+        return 0;
+      },
+    },
+    {
+      field: "totalSpent",
+      headerName: "Total Spent",
+      flex: 1,
+      valueGetter: ({ row }) => {
+        if (!row.totalSpent) {
+          return 0;
+        }
+
+        return row.totalSpent.toFixed(2);
       },
       renderCell: (params) => {
         return (
           <Chip
             icon={<AttachMoneyIcon />}
-            color={params.value > 0 ? "money" : "error"}
+            color={
+              params.value > 0
+                ? "money"
+                : params.value == 0
+                ? "secondary"
+                : "error"
+            }
+            label={"$" + params.value}
+          ></Chip>
+        );
+      },
+    },
+    {
+      field: "sold",
+      headerName: "Overall Sold",
+      flex: 1,
+      valueGetter: ({ row }) => {
+        if (!row.sold) {
+          return 0;
+        }
+
+        return row.sold.toFixed(2);
+      },
+      renderCell: (params) => {
+        return (
+          <Chip
+            icon={<AttachMoneyIcon />}
+            color={
+              params.value > 0
+                ? "money"
+                : params.value == 0
+                ? "secondary"
+                : "error"
+            }
+            label={"$" + params.value}
+          ></Chip>
+        );
+      },
+    },
+    {
+      field: "profit",
+      headerName: "Overall Profit",
+      flex: 1,
+      valueGetter: ({ row }) => {
+        let profit = 0;
+        let sold = 0;
+        let spent = 0;
+        if (row.sold) {
+          sold = row.sold;
+        }
+        if (row.totalSpent) {
+          spent = row.totalSpent;
+        }
+
+        return sold - spent;
+      },
+      renderCell: (params) => {
+        return (
+          <Chip
+            icon={<AttachMoneyIcon />}
+            color={
+              params.value > 0
+                ? "money"
+                : params.value == 0
+                ? "secondary"
+                : "error"
+            }
             label={"$" + params.value}
           ></Chip>
         );

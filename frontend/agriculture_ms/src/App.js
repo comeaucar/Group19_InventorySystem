@@ -1,15 +1,21 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Dashboard from "./Dashboard"; // Assuming you have a Dashboard component
 import Landing from "./Landing";
 import EditProduct from "./EditProduct";
-import AddProduct from './AddProduct';
+import AddProduct from "./AddProduct";
+import AddSupplier from "./AddSupplier";
 import { AuthProvider } from "./AuthContext";
 import PrivateRoute from "./PrivateRoute";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import NavBar from "./NavBar";
-import { LocalizationProvider } from '@mui/x-date-pickers'
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const theme = createTheme({
   palette: {
@@ -27,7 +33,7 @@ const theme = createTheme({
     },
     money: {
       main: "#118C4F",
-      contrastText: "#ffffff"
+      contrastText: "#ffffff",
     },
   },
   overrides: {
@@ -76,8 +82,6 @@ const theme = createTheme({
   },
 });
 
-
-
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -100,6 +104,10 @@ function App() {
                 <Route
                   path="/editproduct/:id"
                   element={<PrivateRoute Component={EditProduct} />}
+                />
+                <Route
+                  path="/addsupplier"
+                  element={<PrivateRoute Component={AddSupplier} />}
                 />
               </Route>
             </Routes>
