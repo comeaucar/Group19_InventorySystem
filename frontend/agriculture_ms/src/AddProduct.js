@@ -15,6 +15,7 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Snackbar,
 } from "@mui/material";
 import {
   getDoc,
@@ -52,6 +53,7 @@ const AddProduct = () => {
   const [costPer, setCostPer] = React.useState(0);
   const [harvestDate, setHarvestDate] = React.useState(yesterday);
   const [expiryDate, setExpiryDate] = React.useState(tomorrow);
+  const [productAddedSnack, setProductAddedSnack] = React.useState(null);
 
   const handleChange = (event) => {
     setProduct(event.target.value);
@@ -131,7 +133,7 @@ const AddProduct = () => {
 
     const newBatch = {
       costPerItem: cp,
-      quantity: q,
+      orderQuantity: q,
       harvestDate: new Date(harvestDate).getTime(),
       expiryDate: new Date(expiryDate).getTime(),
       manufacturer: manu,
@@ -153,6 +155,7 @@ const AddProduct = () => {
     const batchDocRef = await addDoc(batchesRef, newBatch);
 
     console.log("New batch added with id: ", batchDocRef.id);
+    setProductAddedSnack(true);
     navigate("/dashboard");
   };
 
@@ -165,6 +168,7 @@ const AddProduct = () => {
   }
   return (
     <Container maxWidth="lg" sx={{ marginTop: "10px" }}>
+      <Snackbar open={productAddedSnack} autoHideDuration={6000} onClose={() => setProductAddedSnack(false)} />
       <Box
         sx={{
           display: "flex",

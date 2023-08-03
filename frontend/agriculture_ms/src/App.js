@@ -109,7 +109,9 @@ function App() {
                   path="/addsupplier"
                   element={<PrivateRoute Component={AddSupplier} />}
                 />
+                <Route index element={<Navigate to="/landing" replace />} />
               </Route>
+              <Route path="*" element={<Navigate to="/landing" replace />} />
             </Routes>
           </AuthProvider>
         </Router>
