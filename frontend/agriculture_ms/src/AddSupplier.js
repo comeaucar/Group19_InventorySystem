@@ -10,6 +10,7 @@ import {
   CardContent,
   Stack,
   CardActions,
+  Snackbar,
 
 } from "@mui/material";
 import {
@@ -38,6 +39,7 @@ export default function AddSupplier() {
   const [productsSold, setProductsSold] = useState([]);
   const [loading, setIsLoading] = useState(true);
   const [products, setProducts] = useState([]);
+  const [supplierAddedSnack, setSupplierAddedSnack] = useState(false)
   const navigate = useNavigate();
   React.useEffect(() => {
     const fetchData = async () => {
@@ -61,7 +63,7 @@ export default function AddSupplier() {
     fetchData();
   }, []);
 
-  const handleChangeName = (event) => setName(event.target.value);
+  const handleChangeName = (event) => setName(capitalizeFirstLetter(event.target.value));
 
   const handleChangeLocation = (event, key) =>
     setLocation({
@@ -103,6 +105,7 @@ export default function AddSupplier() {
     });
 
     console.log("Added Supplier with id", setManuRef.id);
+    setSupplierAddedSnack(true);
   };
 
   function capitalizeFirstLetter(string) {
@@ -120,6 +123,15 @@ export default function AddSupplier() {
 
   return (
     <Container maxWidth="lg" sx={{ marginTop: "10px" }}>
+      <Snackbar
+        open={supplierAddedSnack}
+        autoHideDuration={2000}
+        message={ name  + " successfully added!"}
+        onClose={() => {
+          setSupplierAddedSnack(false);
+          navigate("/dashboard");
+        }}
+      />
       <Box
         sx={{
           display: "flex",
